@@ -1,12 +1,15 @@
-import { useState } from "react";
-import "./App.css";
-
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
-      <h1>User Management</h1>
+      <main className="h-[calc(100vh-68px)] flex justify-center items-center">
+        <div className="text-center max-w-lg">
+          <h1 className="font-semibold text-4xl mb-4">User Management</h1>
+          <p className="">
+            A seamless platform for managing users, enhancing productivity, and delivering an
+            intuitive user experience.
+          </p>
+        </div>
+      </main>
     </>
   );
 }
