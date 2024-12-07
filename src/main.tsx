@@ -4,7 +4,7 @@ import "./index.css";
 import { LoginPage } from "./pages/login/LoginPage.tsx";
 import { SignUpPage } from "./pages/signup/SignUpPage.tsx";
 import ProtectedRoute from "./routes/ProtectdRoute.tsx";
-import App from "./App.tsx";
+import DashboardPage from "./pages/dashboard/DashboardPage.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
@@ -12,8 +12,7 @@ createRoot(document.getElementById("root")!).render(
       <Route path="login" element={<LoginPage />} />
       <Route path="signup" element={<SignUpPage />} />
       <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<App />} />
-        {/* Add more protected routes here */}
+        <Route path="/" element={<DashboardPage />} />
       </Route>
     </Routes>
   </BrowserRouter>
