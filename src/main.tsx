@@ -8,21 +8,24 @@ import DashboardPage from "./pages/dashboard/DashboardPage.tsx";
 import { StrictMode } from "react";
 import { AuthProvider } from "./store/auth.tsx";
 import PublicRoute from "./routes/PublicRoute.tsx";
+import { UserProvider } from "./store/user.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<PublicRoute />}>
-            <Route path="login" element={<LoginPage />} />
-            <Route path="signup" element={<SignUpPage />} />
-          </Route>
-          <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<DashboardPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <UserProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<PublicRoute />}>
+              <Route path="login" element={<LoginPage />} />
+              <Route path="signup" element={<SignUpPage />} />
+            </Route>
+            <Route element={<ProtectedRoute />}>
+              <Route path="/" element={<DashboardPage />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </UserProvider>
     </AuthProvider>
   </StrictMode>
 );

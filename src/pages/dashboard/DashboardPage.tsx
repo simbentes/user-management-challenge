@@ -1,54 +1,104 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { useNavigate } from "react-router";
 import { UserActionsDropdown } from "./UserActionsDropdown";
 import { Toaster } from "sonner";
 import { useAuth } from "@/store/auth";
+import { User, useUserContext } from "@/store/user";
+import { UserCreationDialog } from "./UserCreationDialog";
+import { Header } from "./Header";
 
-interface User {
-  id: number;
-  email: string;
-  first_name: string;
-  last_name: string;
-  avatar: string;
-}
+const DashboardPage = () => {
+  const { token } = useAuth();
+  const { state, dispatch } = useUserContext();
+  const { users } = state;
 
-interface ApiResponse {
-  data: User[];
-  page: number;
-  total_pages: number;
-}
-
-const DashboardPage: React.FC = () => {
-  const { token, logout } = useAuth();
-  const navigate = useNavigate();
-  const [users, setUsers] = useState<User[]>([]);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [showCreationDialog, setShowCreationDialog] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const handleLogOut = (): void => {
-    logout();
-    navigate("/signup");
-  };
+  console.log({ users });
 
-  const fetchUsers = (currentPage: number) => {
-    if (token) {
-      axios
-        .get<ApiResponse>(`https://reqres.in/api/users?page=${currentPage}`)
-        .then((response) => {
-          setUsers(response.data.data);
-          setTotalPages(response.data.total_pages);
-        })
-        .catch((error) => {
-          console.error("Error fetching users:", error);
-        });
-    }
+  const fetchUsers = () => {
+    axios
+      .get(`https://reqres.in/api/users?page=${page}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        dispatch({ type: "SET_USERS", payload: response.data.data });
+        setTotalPages(response.data.total_pages);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
   };
 
   useEffect(() => {
-    fetchUsers(page);
+    fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
+
+  const handleDeleteUser = (userId: number) => {
+    // Simulate deletion with the API
+    axios
+      .delete(`https://reqres.in/api/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 204) {
+          dispatch({ type: "DELETE_USER", payload: userId });
+        }
+      })
+      .catch((error) => console.error("Error deleting user:", error));
+  };
+
+  const handleEditUser = (user: User) => {
+    axios
+      .patch(
+        `https://reqres.in/api/users/2`,
+        {
+          first_name: user.first_name,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(() => {
+        // Update local state
+        dispatch({ type: "EDIT_USER", payload: user });
+      })
+      .catch((error) => console.error("Error editing user:", error));
+  };
+
+  const handleCreateUser = (user: User) => {
+    axios
+      .post(
+        `https://reqres.in/api/users/`,
+        {
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(() => {
+        dispatch({ type: "ADD_USER", payload: user });
+        setShowCreationDialog(false);
+      })
+      .catch((error) => console.error("Error creating user:", error));
+  };
 
   const handleNextPage = () => {
     if (page < totalPages) {
@@ -64,34 +114,44 @@ const DashboardPage: React.FC = () => {
 
   return (
     <>
-      <header className="flex-none flex justify-end items-center gap-x-1 p-4">
-        <Button variant="outline" onClick={handleLogOut}>
-          Log Out
-        </Button>
-      </header>
-      <main className="h-[calc(100vh-68px)] w-full max-w-5xl mx-auto p-4">
+      <Header />
+      <main className="h-[calc(100vh-68px)] w-full max-w-5xl mx-auto p-4 mt-8">
         <section className="flex justify-between items-center mb-8">
           <h1 className="font-semibold text-4xl">Dashboard</h1>
-          <Button size="sm">Create User</Button>
+          <Button size="sm" onClick={() => setShowCreationDialog(true)}>
+            Create User
+          </Button>
         </section>
         <section className="mb-12">
-          {users.map((user) => (
-            <div
-              key={user.id}
-              className="grid grid-cols-[3rem_1fr_2fr_2.5rem] items-center gap-x-4 p-4 border-b border-border"
-            >
-              <img
-                src={user.avatar}
-                alt={`${user.first_name} ${user.last_name}`}
-                className="w-12 h-12 rounded-full"
-              />
-              <h2 className="font-semibold text-lg">
-                {user.first_name} {user.last_name}
-              </h2>
-              <p className="text-gray-600">{user.email}</p>
-              <UserActionsDropdown />
-            </div>
-          ))}
+          {loading ? (
+            <div>Loadingggg......</div>
+          ) : (
+            users.map((user) => (
+              <div
+                key={user.id}
+                className="grid grid-cols-[3rem_1fr_2fr_2.5rem] items-center gap-x-4 p-4 border-b border-border"
+              >
+                {user.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={`${user.first_name} ${user.last_name} profile picture`}
+                    className="w-12 h-12 rounded-full"
+                  />
+                ) : (
+                  <div className="w-12 h-12" />
+                )}
+                <h2 className="font-semibold text-lg">
+                  {user.first_name} {user.last_name}
+                </h2>
+                <p className="text-gray-600">{user.email}</p>
+                <UserActionsDropdown
+                  user={user}
+                  onDeleteUser={handleDeleteUser}
+                  onEditUser={handleEditUser}
+                />
+              </div>
+            ))
+          )}
         </section>
 
         <div className="flex justify-end gap-2">
@@ -111,6 +171,11 @@ const DashboardPage: React.FC = () => {
           </Button>
         </div>
       </main>
+      <UserCreationDialog
+        open={showCreationDialog}
+        onOpenChange={setShowCreationDialog}
+        onCreateUser={handleCreateUser}
+      />
       <Toaster closeButton />
     </>
   );
