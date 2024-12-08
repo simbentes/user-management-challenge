@@ -9,23 +9,26 @@ import { StrictMode } from "react";
 import { AuthProvider } from "./store/auth.tsx";
 import PublicRoute from "./routes/PublicRoute.tsx";
 import { UserProvider } from "./store/user.tsx";
+import { ThemeProvider } from "./store/theme.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AuthProvider>
-      <UserProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route element={<PublicRoute />}>
-              <Route path="login" element={<LoginPage />} />
-              <Route path="signup" element={<SignUpPage />} />
-            </Route>
-            <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<DashboardPage />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </UserProvider>
-    </AuthProvider>
+    <ThemeProvider storageKey="ui-theme">
+      <AuthProvider>
+        <UserProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route element={<PublicRoute />}>
+                <Route path="login" element={<LoginPage />} />
+                <Route path="signup" element={<SignUpPage />} />
+              </Route>
+              <Route element={<ProtectedRoute />}>
+                <Route path="/" element={<DashboardPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </UserProvider>
+      </AuthProvider>
+    </ThemeProvider>
   </StrictMode>
 );
