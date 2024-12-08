@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@/components/ui/errorMessage";
 import axios from "axios";
 import { useState } from "react";
+import { useAuth } from "@/store/auth";
 
 type LoginData = {
   email: string;
@@ -13,27 +14,29 @@ type LoginData = {
 };
 
 export const LoginPage = () => {
+  const { setToken } = useAuth();
   const [authError, setAuthError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const { register, handleSubmit } = useForm<LoginData>();
 
-  const onSubmit = async (data: LoginData) => {
+  const onSubmit = (data: LoginData) => {
     setAuthError(null);
-    try {
-      const response = await axios.post("https://reqres.in/api/login", {
+
+    axios
+      .post("https://reqres.in/api/login", {
         email: data.email,
         password: data.password,
+      })
+      .then((response) => {
+        if (response.data.token) {
+          setToken(response.data.token);
+          navigate("/", { replace: true });
+        }
+      })
+      .catch((error) => {
+        setAuthError(error.response?.data?.error);
       });
-
-      if (response.data.token) {
-        localStorage.setItem("authToken", response.data.token);
-      }
-
-      navigate("/", { replace: true });
-    } catch (error: unknown) {
-      setAuthError(error.response?.data?.error);
-    }
   };
 
   return (

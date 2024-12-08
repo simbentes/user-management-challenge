@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@/components/ui/errorMessage";
 import axios from "axios";
 import { useState } from "react";
+import { useAuth } from "@/store/auth";
 
 type SignUpData = {
   email: string;
@@ -14,6 +15,7 @@ type SignUpData = {
 };
 
 export const SignUpPage = () => {
+  const { setToken } = useAuth();
   const [authError, setAuthError] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -24,22 +26,23 @@ export const SignUpPage = () => {
     watch,
   } = useForm<SignUpData>();
 
-  const onSubmit = async (data: SignUpData) => {
+  const onSubmit = (data: SignUpData) => {
     setAuthError(null);
-    try {
-      const response = await axios.post("https://reqres.in/api/register", {
+
+    axios
+      .post("https://reqres.in/api/register", {
         email: data.email,
         password: data.password,
+      })
+      .then((response) => {
+        if (response.data.token) {
+          setToken(response.data.token);
+          navigate("/", { replace: true });
+        }
+      })
+      .catch((error) => {
+        setAuthError(error.response?.data?.error);
       });
-
-      if (response.data.token) {
-        localStorage.setItem("authToken", response.data.token);
-      }
-
-      navigate("/", { replace: true });
-    } catch (error: unknown) {
-      setAuthError(error.response?.data?.error);
-    }
   };
 
   const passwordValue = watch("password");
