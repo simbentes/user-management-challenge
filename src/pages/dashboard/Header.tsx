@@ -2,13 +2,6 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/store/auth";
 import { useNavigate } from "react-router";
 import { Moon, Sun } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/store/theme";
 
 export function Header() {
