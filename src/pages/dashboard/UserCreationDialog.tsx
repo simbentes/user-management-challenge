@@ -82,7 +82,9 @@ export function UserCreationDialog({ onCreateUser, ...props }: Props) {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Create</Button>
+            <Button data-testid="create-user-button-dialog" type="submit">
+              Create
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

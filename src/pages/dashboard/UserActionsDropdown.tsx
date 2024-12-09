@@ -77,18 +77,19 @@ export function UserActionsDropdown({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" data-testid="users-action-menu">
             <Ellipsis />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-48" align="end">
-          <DropdownMenuItem onSelect={() => setShowEditSheet(true)}>
+          <DropdownMenuItem data-testid="edit-user-button" onSelect={() => setShowEditSheet(true)}>
             <Pen />
             <span>Edit</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="text-destructive focus:text-destructive"
+            data-testid="delete-user-button"
             onSelect={() => setShowDeleteDialog(true)}
           >
             <Trash2 />
@@ -109,6 +110,7 @@ export function UserActionsDropdown({
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <Button
               variant="destructive"
+              data-testid="confirm-delete-button"
               onClick={() => {
                 setShowDeleteDialog(false);
                 onDeleteUser(user.id);
@@ -182,7 +184,9 @@ export function UserActionsDropdown({
             </div>
             <SheetFooter>
               <SheetClose asChild>
-                <Button type="submit">Save changes</Button>
+                <Button data-testid="save-changes-button" type="submit">
+                  Save changes
+                </Button>
               </SheetClose>
             </SheetFooter>
           </form>

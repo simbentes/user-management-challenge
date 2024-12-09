@@ -42,7 +42,7 @@ export const LoginPage = () => {
   return (
     <>
       <header className="flex-none flex justify-end items-center gap-x-1 p-4">
-        <Button variant="outline" asChild>
+        <Button variant="outline" data-testid="signup-button-header" asChild>
           <NavLink to="/signup">Sign Up</NavLink>
         </Button>
       </header>
@@ -76,7 +76,11 @@ export const LoginPage = () => {
             </form>
             <p className="text-center mt-20 text-sm">
               Don’t have an account?{" "}
-              <NavLink to="/signup" className="text-blue-600 hover:underline">
+              <NavLink
+                to="/signup"
+                data-testid="signup-link"
+                className="text-blue-600 hover:underline"
+              >
                 Sign Up
               </NavLink>
             </p>
