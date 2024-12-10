@@ -2,8 +2,6 @@
 
 ## Project Setup
 
-### Local Development
-
 1. Clone the repository:
 
    ```bash
@@ -25,8 +23,6 @@
 
 4. Open your browser and visit `http://localhost:3000`.
 
----
-
 ## Project Structure
 
 ```
@@ -40,8 +36,6 @@ src/
 └── main.tsx           # Entry point
 ```
 
----
-
 ## Testing
 
 Run automated tests with Cypress:
@@ -49,8 +43,6 @@ Run automated tests with Cypress:
 ```bash
 pnpm cypress open
 ```
-
----
 
 ## Technologies Used
 
