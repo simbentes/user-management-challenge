@@ -1,27 +1,5 @@
 # User Management System
 
-This is a React-based application designed as a user management system. It supports user registration, login, user management functionalities (create, update, delete users), theme customization, and automated testing.
-
-## Features
-
-1. **Authentication:**
-
-   - User registration and login.
-   - Session handling with token-based authentication.
-
-2. **User Management Dashboard:**
-
-   - List users with pagination (6 users per page).
-   - Create, update, and delete users.
-
-3. **Theme Customization:**
-
-   - Switch between light and dark themes.
-   - Theme preference persists across sessions.
-
-4. **Automated Testing:**
-   - Includes Cypress tests for login, signup, session handling, navigation, and user management.
-
 ## Project Setup
 
 ### Local Development
@@ -46,27 +24,6 @@ This is a React-based application designed as a user management system. It suppo
    ```
 
 4. Open your browser and visit `http://localhost:3000`.
-
----
-
-## Docker Setup
-
-### Build the Docker Image
-
-1. Build the Docker image:
-   ```bash
-   docker build -t user-management-app .
-   ```
-
-### Run the Docker Container
-
-2. Run the container:
-
-   ```bash
-   docker run -d -p 3000:80 user-management-app
-   ```
-
-3. Open your browser and visit `http://localhost:3000`.
 
 ---
 
