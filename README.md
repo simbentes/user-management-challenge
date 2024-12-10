@@ -6,6 +6,7 @@
 
    ```bash
    git clone https://github.com/simbentes/user-management-challenge
+
    cd user-management-challenge
    ```
 
