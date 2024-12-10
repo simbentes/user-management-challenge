@@ -22,8 +22,6 @@
    pnpm dev
    ```
 
-4. Open your browser and visit `http://localhost:3000`.
-
 ## Project Structure
 
 ```
